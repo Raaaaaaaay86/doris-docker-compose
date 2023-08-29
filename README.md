@@ -1,7 +1,3 @@
-# Introduction
-This is a Doris cluster built with docker-compose. It contains 1 FE node and 1 BE node. Add more node as you need.
-Plead run `init-folder.sh` to create volume folders for docker-compose.
-
 # Port Information
 | Instance | Port Name              | Default Port | Communication Direction    | Description                                                           |
 | -------- | ---------------------- | ------------ | -------------------------- | --------------------------------------------------------------------- |

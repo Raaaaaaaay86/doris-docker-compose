@@ -1,38 +1,61 @@
 version: "3"
 services:
     fe:
-      image: apache/doris:1.2.2-fe-arm
+      image: apache/doris:1.2.2-fe-x86_64
       hostname: fe
       environment:
         - FE_SERVERS=fe1:172.25.80.2:9010
         - FE_ID=1
       volumes:
-        - ./data/fe/doris-meta/:/opt/apache-doris/fe/doris-meta/
-        - ./data/fe/log/:/opt/apache-doris/fe/log/
+        - doris_fe1_data:/opt/apache-doris
       ports:
         - 8030:8030 # HTTP Port
         - 9030:9030 # MySQL Port
       networks:
         doris_net:
           ipv4_address: 172.25.80.2
-    be:
-      image: apache/doris:1.2.2-be-arm
-      hostname: be
+
+    be1:
+      image: apache/doris:1.2.2-be-x86_64
+      hostname: be1
       environment:
         - FE_SERVERS=fe1:172.25.80.2:9010
         - BE_ADDR=172.25.80.3:9050
       volumes:
-        - ./data/be/storage/:/opt/apache-doris/be/storage/
-        - ./data/be/script/:/docker-entrypoint-initdb.d/
-      ports:
-        - 8040:8040 # HTTP Port
+        - doris_be1_data:/opt/apache-doris
       depends_on:
         - fe
+      ports:
+        - 9050:9050 # BE Port
+        - 8040:8040 # HTTP Port
       networks:
         doris_net:
           ipv4_address: 172.25.80.3
+
+    # be2:
+    #   image: apache/doris:1.2.2-be-x86_64
+    #   hostname: be2
+    #   environment:
+    #     - FE_SERVERS=fe1:172.25.80.2:9010
+    #     - BE_ADDR=172.25.80.4:9050
+    #   volumes:
+    #     - doris_be2_data:/opt/apache-doris
+    #   depends_on:
+    #     - fe
+    #   ports:
+    #     - 9051:9050 # BE Port
+    #     - 8041:8040 # HTTP Port
+    #   networks:
+    #     doris_net:
+    #       ipv4_address: 172.25.80.4
+
 networks:
   doris_net:
     ipam:
       config:
         - subnet: 172.25.80.0/16
+
+volumes:
+  doris_fe1_data:
+  doris_be1_data:
+  doris_be2_data:

@@ -1,13 +1,14 @@
 version: "3"
 services:
     fe:
-      image: apache/doris:1.2.2-fe-x86_64
+      image: apache/doris:1.2.2-fe-arm
       hostname: fe
       environment:
         - FE_SERVERS=fe1:172.25.80.2:9010
         - FE_ID=1
       volumes:
         - doris_fe1_data:/opt/apache-doris
+        - ./conf/fe.conf:/opt/apache-doris/fe/conf/fe.conf
       ports:
         - 8030:8030 # HTTP Port
         - 9030:9030 # MySQL Port
@@ -16,13 +17,14 @@ services:
           ipv4_address: 172.25.80.2
 
     be1:
-      image: apache/doris:1.2.2-be-x86_64
+      image: apache/doris:1.2.2-be-arm
       hostname: be1
       environment:
         - FE_SERVERS=fe1:172.25.80.2:9010
         - BE_ADDR=172.25.80.3:9050
       volumes:
         - doris_be1_data:/opt/apache-doris
+        - ./conf/be.conf:/opt/apache-doris/fe/conf/be.conf
       depends_on:
         - fe
       ports:
@@ -33,7 +35,7 @@ services:
           ipv4_address: 172.25.80.3
 
     # be2:
-    #   image: apache/doris:1.2.2-be-x86_64
+    #   image: apache/doris:1.2.2-be-arm
     #   hostname: be2
     #   environment:
     #     - FE_SERVERS=fe1:172.25.80.2:9010
